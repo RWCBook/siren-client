@@ -26,6 +26,12 @@ function siren() {
   g.ctype = "application/x-www-form-urlencoded";
   g.atype = "application/vnd.siren+json";
   g.title = "";
+  g.context = "";
+
+  g.fields = {};
+  g.fields.home = [];
+  g.fields.task = ["id","title","tags","completeFlag","assignedUser"];
+  g.fields.user = ["nick","password","name"];
   
   // init library and start
   function init(url, title) {
@@ -45,6 +51,7 @@ function siren() {
   function parseMsg() {
     sirenClear();
     title();
+    getContent();
     dump();
     links();
     entities();
@@ -70,7 +77,23 @@ function siren() {
     var elm = d.find("dump");
     elm.innerText = JSON.stringify(g.msg, null, 2);
   }
+  
+  // get response content
+  function getContent() {
+    var elm, coll;
     
+    if(g.msg.properties) {
+      coll = g.msg.properties;
+      for(var prop in coll) {
+        if(prop==="content") {
+          elm = d.find("content");
+          elm.innerHTML = coll[prop];
+          break;
+        } 
+      }
+    }
+  }  
+  
   // links
   function links() {
     var elm, coll;
@@ -100,7 +123,7 @@ function siren() {
 
   // entities
   function entities() {
-    var elm, coll;
+    var elm, coll, cls;
     var ul, li, dl, dt, dd, a, p;
     
     elm = d.find("entities");
@@ -111,36 +134,38 @@ function siren() {
       
       coll = g.msg.entities;
       for(var item of coll) {
-        li = d.node("li");
-        dl = d.node("dl");
-        dt = d.node("dt");
+      
+        cls = item.class[0];
         
-        a = d.anchor({
-          href:item.href,
-          rel:item.rel.join(" "),
-          className:item.class.join(" "),
-          text:item.title||item.href});
-        a.onclick = httpGet;
-        d.push(a, dt);
-        d.push(dt, dl);
+        if(g.fields[cls]) {
+          li = d.node("li");
+          dl = d.node("dl");
+          dt = d.node("dt");
+          
+          a = d.anchor({
+            href:item.href,
+            rel:item.rel.join(" "),
+            className:item.class.join(" "),
+            text:item.title||item.href});
+          a.onclick = httpGet;
+          d.push(a, dt);
+          d.push(dt, dl);
 
-        dd = d.node("dd");
-        for(var prop in item) {
-          if(prop!=="href" && 
-            prop!=="class" && 
-            prop!=="type" && 
-            prop!=="rel") {
-            p = d.data({
-              className:"item "+item.class.join(" "),
-              text:prop+"&nbsp;",
-              value:item[prop]+"&nbsp;"
-            });
-            d.push(p,dd);
+          dd = d.node("dd");
+          for(var prop in item) {
+            if(g.fields[cls].indexOf(prop)!==-1) {
+              p = d.data({
+                className:"item "+item.class.join(" "),
+                text:prop+"&nbsp;",
+                value:item[prop]+"&nbsp;"
+              });
+              d.push(p,dd);
+            }
           }
+          d.push(dd, dl);
+          d.push(dl, li);
+          d.push(li, ul);
         }
-        d.push(dd, dl);
-        d.push(dl, li);
-        d.push(li, ul);
       }
       d.push(ul, elm);
     }
@@ -173,7 +198,7 @@ function siren() {
             "prompt" : fld.title||fld.name,
             "name" : fld.name,
             "className" : fld.class.join(" "),
-            "value" : fld.value||"",
+            "value" : g.msg.properties[fld.name]||fld.value,
             "type" : fld.type||"text"});
           d.push(p,fs);                    
         }
@@ -193,24 +218,30 @@ function siren() {
   
   // properties
   function properties() {
-    var elm, coll;
+    var elm, coll, cls;
     var ul, dl, dt, dd, a, p;
     
     elm = d.find("properties");
     d.clear(elm);
+    
+    if(g.msg.class) {
+      cls = g.msg.class[0];
+    }
     
     if(g.msg.properties) {
       ul = d.node("ul");
       dl = d.node("dl");
       dd = d.node("dd");
       coll = g.msg.properties;
-      for(var prop in coll) {        
-        p = d.data({
-          className:"item "+g.msg.class.join(" ")||"",
-          text:prop+"&nbsp;",
-          value:coll[prop]+"&nbsp;"
-        });
-        d.push(p,dd);
+      for(var prop in coll) {  
+        if(g.fields[cls].indexOf(prop)!==-1) {
+          p = d.data({
+            className:"item "+g.msg.class.join(" ")||"",
+            text:prop+"&nbsp;",
+            value:coll[prop]+"&nbsp;"
+          });
+          d.push(p,dd);
+        }      
       }
       d.push(dd, dl);
       d.push(dl, elm);
@@ -234,6 +265,8 @@ function siren() {
     elm = d.find("entities");
     d.clear(elm);
     elm = d.find("properties");
+    d.clear(elm);
+    elm = d.find("content");
     d.clear(elm);
   }
 
