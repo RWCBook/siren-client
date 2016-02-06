@@ -1,5 +1,5 @@
 /*******************************************************
- * todo-mvc implementation 
+ * siren-json representor 
  * siren representor (server)
  * May 2015
  * Mike Amundsen (@mamund)
@@ -47,6 +47,11 @@ function siren(object, root) {
       siren.class = [];
     }
     siren.class.push(o);
+    
+    if(o==="error") {
+      siren = getError(siren, object[o], o);
+    }
+    
     if(object[o].data) {
       if(object[o].data.length===1) {
         siren = getEntity(siren, object[o], o);
@@ -64,6 +69,26 @@ function siren(object, root) {
   return JSON.stringify(siren, null, 2);
 }
 
+// handle any error info
+function getError(siren, object, o) {
+  var properties;
+  
+  if(siren.properties) {
+    properties = siren.properties;
+  }
+  else {
+    properties = {};
+  }
+  
+  for(var p in object) {
+    properties[p] = object[p];
+  }
+
+  siren.class = [o];
+  siren.properties = properties;
+  
+  return siren;
+}
 
 // handle single entity
 function getEntity(siren, object, o) {
@@ -167,10 +192,15 @@ function getActions(actions, o, data) {
         field = {};
         if(input.name) {
           field.name = input.name;
-          field.type = input.type||"text" //fallback
+          field.type = input.type||"text";
           field.value = input.value||"";
           field.title = input.prompt||input.name;
           field.class = [o];
+          field.readOnly = input.readOnly||false;
+          field.required = input.required||false;
+          if(input.pattern) {
+            field.pattern = input.pattern;
+          }
           form.fields.push(field);
         }
       }

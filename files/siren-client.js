@@ -1,5 +1,5 @@
 /*******************************************************
- * todo-mvc implementation 
+ * siren-json HTML/SPA client engine 
  * siren representor (server)
  * June 2015
  * Mike Amundsen (@mamund)
@@ -11,7 +11,6 @@
   - uses no other external libs/frameworks
   
   - built/tested for chrome browser (YMMV on other browsers)
-  - designed to act as a "validator" for a human-driven HAL client.
   - not production robust (missing error-handling, perf-tweaking, etc.)
   - report issues to https://github.com/lchbook/
 */
@@ -32,6 +31,7 @@ function siren() {
   g.fields.home = [];
   g.fields.task = ["id","title","tags","completeFlag","assignedUser"];
   g.fields.user = ["nick","password","name"];
+  g.fields.error = ["code","message","title","url"];
   
   // init library and start
   function init(url, title) {
@@ -77,7 +77,7 @@ function siren() {
     var elm = d.find("dump");
     elm.innerText = JSON.stringify(g.msg, null, 2);
   }
-  
+    
   // get response content
   function getContent() {
     var elm, coll;
@@ -133,10 +133,8 @@ function siren() {
       ul = d.node("ul");
       
       coll = g.msg.entities;
-      for(var item of coll) {
-      
+      for(var item of coll) {      
         cls = item.class[0];
-        
         if(g.fields[cls]) {
           li = d.node("li");
           dl = d.node("dl");
@@ -186,6 +184,7 @@ function siren() {
         li = d.node("li");
         frm = d.node("form");
         frm.id = act.name;
+        frm.setAttribute("smethod",act.method);
         frm.method = act.method;
         frm.action = act.href;
         frm.onsubmit = httpForm;
@@ -199,7 +198,11 @@ function siren() {
             "name" : fld.name,
             "className" : fld.class.join(" "),
             "value" : g.msg.properties[fld.name]||fld.value,
-            "type" : fld.type||"text"});
+            "type" : fld.type||"text",
+            "required" : fld.required||false,
+            "readOnly" : fld.readOnly||false,
+            "pattern" : fld.pattern||""
+          });
           d.push(p,fs);                    
         }
         p = d.node("p");
@@ -232,6 +235,19 @@ function siren() {
       ul = d.node("ul");
       dl = d.node("dl");
       dd = d.node("dd");
+      
+      if(cls==="error") {
+        dt = d.node("dt");
+        a = d.anchor({
+          href:g.url,
+          rel:"error",
+          className:"error",
+          text:"Reload"});
+          a.onclick = httpGet;
+          d.push(a, dt);
+          d.push(dt, dl);
+      }
+      
       coll = g.msg.properties;
       for(var prop in coll) {  
         if(g.fields[cls].indexOf(prop)!==-1) {
@@ -287,7 +303,7 @@ function siren() {
     args = {};
     form = e.target;
     url = form.action; 
-    method = form.method.toLowerCase();
+    method = form.getAttribute("smethod").toLowerCase();
     nodes = d.tags("input", form);
     for (i = 0, x = nodes.length; i < x; i++) {
       if (nodes[i].name && nodes[i].name !== '') {

@@ -211,6 +211,7 @@ function loadTrans() {
     prompt : "Add Task",
     inputs : [
       {name : "title", prompt : "Title", required : true},
+      {name : "tags", prompt : "Tags"},
       {name : "completeFlag", prompt : "Complete", value : "false", 
         pattern :"true|false",
         type:"select",
@@ -230,6 +231,7 @@ function loadTrans() {
     inputs : [
       {name : "id", prompt : "ID", value : "", readOnly : true},
       {name : "title", prompt : "Title", value : ""},
+      {name : "tags", prompt : "Tags", value : ""},
       {name : "completeFlag", prompt : "Complete", value : "false", 
         pattern :"true|false",
         type:"select",
