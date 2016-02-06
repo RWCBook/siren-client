@@ -49,14 +49,13 @@ function siren(object, root) {
     siren.class.push(o);
     if(object[o].data) {
       if(object[o].data.length===1) {
-        siren = getEntity(siren, object[o].data, o);
+        siren = getEntity(siren, object[o], o);
       }
       else {
-        siren.entities = getSubEntities(object[o], o);
+        siren = getSubEntities(siren, object[o], o);
       }
     }
     if(object[o].actions) {
-      l = object[o].data.length===1
       siren.actions = getActions(object[o].actions, o, object[o].data);
       siren.links = getLinks(object[o].actions, o, object[o].data);    
     }
@@ -67,15 +66,23 @@ function siren(object, root) {
 
 
 // handle single entity
-function getEntity(siren, data, o) {
+function getEntity(siren, object, o) {
   var props, properties;
   
-  props = data[0];
-  properties = {};
+  props = object.data[0];
+  if(siren.properties) {
+    properties = siren.properties;
+  } 
+  else {
+    properties = {};
+  }
+  
+  if(object.content) {
+    properties.content = object.content;
+  }
+  
   for(var p in props) {
-    if(p!=='meta') {
-      properties[p] = props[p];
-    }
+    properties[p] = props[p];
   }
   
   siren.class = [o]
@@ -85,12 +92,19 @@ function getEntity(siren, data, o) {
 }
 
 // handle collection of subentities
-function getSubEntities(object, o) {
+function getSubEntities(siren, object, o) {
   var items, item, i, x, data, actions;
   
   data = object.data;
   actions = object.actions;
   items= [];
+  
+  if(object.content) {
+    if(!siren.properties) {
+      siren.properties = {};
+    }
+    siren.properties.content = object.content;
+  }
   
   if(data) {
     for(i=0,x=data.length;i<x;i++) {
@@ -119,7 +133,9 @@ function getSubEntities(object, o) {
     }
   }
   
-  return items;
+  siren.entities = items;
+  
+  return siren;
 }
 
 // handle actions
