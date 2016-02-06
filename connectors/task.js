@@ -204,8 +204,6 @@ function sendItemPage(req, res, respond, id) {
       rel:["markCompleted","edit-form"],root:root},coll);
     
     // item forms
-    tran = wstl.append({name:"taskFormEdit",href:"/task/{key}",
-      rel:["edit-form"],root:root},coll);
     tran = wstl.append({name:"taskFormEditPost",href:"/task/update/{key}",
       rel:["post-edit","edit-form"],root:root},coll);
     tran = wstl.append({name:"taskFormEdit",href:"/task/{key}",

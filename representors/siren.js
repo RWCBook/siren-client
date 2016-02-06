@@ -56,8 +56,9 @@ function siren(object, root) {
       }
     }
     if(object[o].actions) {
-      siren.actions = getActions(object[o].actions, o);
-      siren.links = getLinks(object[o].actions, o);    
+      l = object[o].data.length===1
+      siren.actions = getActions(object[o].actions, o, object[o].data);
+      siren.links = getLinks(object[o].actions, o, object[o].data);    
     }
   }
        
@@ -122,17 +123,21 @@ function getSubEntities(object, o) {
 }
 
 // handle actions
-function getActions(actions, o) {
+function getActions(actions, o, data) {
   var coll, form, action, input, i, x;
   
   coll = [];
   for(i=0, x=actions.length; i<x; i++) {
-    if(actions[i].type!=="safe" || actions[i].inputs) {
+    if(actions[i].inputs && actions[i].inputs.length!==0 && actions[i].target.indexOf("siren")!==-1) {
       action = actions[i];
       form = {};
       form.name = action.name;
       form.title = action.prompt||action.name;
       form.href = action.href.replace(/^\/\//,"http://")||"#";
+      if(data && data.length==1) {
+        form.href = form.href.replace(/{key}/g,data[0].id||"");
+        form.href = form.href.replace(/{id}/g,data[0].id||"");
+      }
       if(action.type!=="safe") {
         form.type = action.contentType||g.ctype;
         form.method = utils.actionMethod(action.action)
@@ -160,20 +165,62 @@ function getActions(actions, o) {
 }
 
 // handle links
-function getLinks(actions, o) {
+function getLinks(actions, o, data) {
   var coll, link, action, i, x;
+  var single, item;
+  
+  single = (data && data.length===1);
+  if(data && data.length===1) {
+    item = data[0];
+  }
   
   coll = [];
   for(i=0, x=actions.length; i<x; i++) {
-    if(actions[i].type==="safe" && (actions[i].inputs===undefined || actions[i].inputs.length===0)) {
-      action = actions[i];
-      link = {};
-      link.rel = action.rel;
-      link.href = action.href.replace(/^\/\//,"http://");
-      link.class = [o];
-      link.title = action.prompt||"";
-      link.type = action.contentType||g.atype;
-      coll.push(link);
+    if(actions[i].type==="safe" && actions[i].target.indexOf("siren")!==-1 && 
+      (actions[i].inputs===undefined || actions[i].inputs.length===0)) 
+    {
+      if(single===true && actions[i].target.indexOf("item")!==-1) {
+        action = actions[i];
+        link = {};
+        link.rel = action.rel;
+        link.href = action.href.replace(/^\/\//,"http://");
+        if(item) {
+          link.href = link.href.replace(/{key}/g,item.id||"");
+          link.href = link.href.replace(/{id}/g,item.id)||"";
+        }
+        link.class = [o];
+        link.title = action.prompt||"";
+        link.type = action.contentType||g.atype;
+        coll.push(link);
+      }
+      if(single===false && actions[i].target.indexOf("list")!==-1) {
+        action = actions[i];
+        link = {};
+        link.rel = action.rel;
+        link.href = action.href.replace(/^\/\//,"http://");
+        if(item) {
+          link.href = link.href.replace(/{key}/g,item.id||"");
+          link.href = link.href.replace(/{id}/g,item.id)||"";
+        }
+        link.class = [o];
+        link.title = action.prompt||"";
+        link.type = action.contentType||g.atype;
+        coll.push(link);
+      }
+      if(actions[i].target.indexOf("app")!==-1) {
+        action = actions[i];
+        link = {};
+        link.rel = action.rel;
+        link.href = action.href.replace(/^\/\//,"http://");
+        if(item) {
+          link.href = link.href.replace(/{key}/g,item.id||"");
+          link.href = link.href.replace(/{id}/g,item.id)||"";
+        }
+        link.class = [o];
+        link.title = action.prompt||"";
+        link.type = action.contentType||g.atype;
+        coll.push(link);
+      }
     }
   }
   return coll;

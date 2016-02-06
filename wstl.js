@@ -107,7 +107,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "home",
-    target : "app menu hal",
+    target : "app menu hal siren",
     prompt : "Home"
   });
   trans.push({
@@ -115,7 +115,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "app menu hal",
+    target : "app menu hal siren",
     prompt : "Tasks"
   });  
   trans.push({
@@ -123,7 +123,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "user",
-    target : "app menu hal",
+    target : "app menu hal siren",
     prompt : "Users"
   });
 
@@ -135,7 +135,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Active Tasks",
     inputs : [
       {name : "completeFlag", prompt : "Complete", value : "false", readOnly:true}
@@ -146,7 +146,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Completed Tasks",
     inputs : [
       {name : "completeFlag", prompt : "Complete", value : "true", readOnly:true}
@@ -158,7 +158,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Search By Title",
     inputs : [
       {name : "title", prompt : "Title", value : ""}
@@ -170,7 +170,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Search By Assigned User",
     inputs : [
       {name : "assignedUser", prompt : "User", value : ""}
@@ -182,7 +182,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Search By Tag",
     inputs : [
       {name : "tags", prompt : "Tags", value : ""}
@@ -207,7 +207,7 @@ function loadTrans() {
     type : "unsafe",
     action : "append",
     kind : "task",
-    target : "list add hal",
+    target : "list add hal siren",
     prompt : "Add Task",
     inputs : [
       {name : "title", prompt : "Title", required : true},
@@ -226,7 +226,7 @@ function loadTrans() {
     action : "replace",
     kind : "task",
     prompt : "Edit Task",
-    target : "item edit hal",
+    target : "item edit hal siren",
     inputs : [
       {name : "id", prompt : "ID", value : "", readOnly : true},
       {name : "title", prompt : "Title", value : ""},
@@ -263,7 +263,7 @@ function loadTrans() {
     action : "remove",
     kind : "task",
     prompt : "Remove Task",
-    target : "item edit hal",
+    target : "item edit hal siren",
     inputs : [
       {name : "id", prompt : "ID", readOnly : true}
     ]
@@ -298,7 +298,7 @@ function loadTrans() {
     type : "unsafe",
     action : "append",
     kind : "task",
-    target : "item completed edit post form hal",
+    target : "item completed edit post form hal siren",
     prompt : "Mark Completed",
     inputs : [
       {name: "id", prompt:"ID", readOnly:true},
@@ -321,7 +321,7 @@ function loadTrans() {
     type : "unsafe",
     action : "append",
     kind : "task",
-    target : "item active edit post form hal",
+    target : "item active edit post form hal siren",
     prompt : "Mark Active",
     inputs : [
 
@@ -345,7 +345,7 @@ function loadTrans() {
     type : "unsafe",
     action : "append",
     kind : "task",
-    target : "item assign edit post form hal",
+    target : "item assign edit post form hal siren",
     prompt : "Assign User",
     inputs : [
       {name: "id", prompt:"ID", readOnly:true},
@@ -373,7 +373,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "user",
-    target : "item hal",
+    target : "item hal siren",
     prompt : "Assigned Tasks",
     html : {
       className : "item link ui basic blue button"
@@ -385,7 +385,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Search By Nick",
     inputs : [
       {name : "nick", prompt : "Nickname", value : ""}
@@ -397,7 +397,7 @@ function loadTrans() {
     type : "safe",
     action : "read",
     kind : "task",
-    target : "list query hal",
+    target : "list query hal siren",
     prompt : "Search By Name",
     inputs : [
       {name : "name", prompt : "Name", value : ""}
@@ -409,7 +409,7 @@ function loadTrans() {
     type : "unsafe",
     action : "append",
     kind : "user",
-    target : "list add hal",
+    target : "list add hal siren",
     prompt : "Add User",
     inputs : [
       {name : "nick", prompt : "Nickname", required: true, pattern: "[a-zA-Z0-9]+"},
@@ -424,7 +424,7 @@ function loadTrans() {
     action : "replace",
     kind : "user",
     prompt : "Edit User",
-    target : "item edit form hal",
+    target : "item edit form hal siren",
     inputs : [
       {name : "nick", prompt : "Nickname", value : "", readOnly: true},
       {name : "name", prompt : "Full Name", value : ""}
@@ -460,12 +460,12 @@ function loadTrans() {
     action : "append",
     kind : "task",
     prompt : "Change Password",
-    target : "item edit form post hal",
+    target : "item edit form post hal siren",
     inputs : [
       {name : "nick", prompt : "Nickname", value : "", readOnly: true},
       {name : "oldpass", prompt : "Current Password", value : "", required: true, pattern: "[a-zA-Z0-9!@#$%^&*-]+"},
       {name : "newpass", prompt : "New Password", value : "", required: true, pattern: "[a-zA-Z0-9!@#$%^&*-]+"},
-      {name : "checkpass", prompt : "Confirm New Password", value : "", required: true, pattern: "[a-zA-Z0-9!@#$%^&*-]+"}
+      {name : "checkpass", prompt : "Confirm PW", value : "", required: true, pattern: "[a-zA-Z0-9!@#$%^&*-]+"}
     ]
   });
 
