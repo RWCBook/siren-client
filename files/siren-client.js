@@ -97,6 +97,7 @@ function siren() {
   // links
   function links() {
     var elm, coll;
+    var menu, a;
     
     elm = d.find("links");
     d.clear(elm);
@@ -123,7 +124,7 @@ function siren() {
   // entities
   function entities() {
     var elm, coll, cls;
-    var segment, li, dl, dt, dd, a, p;
+    var segment, menu, a, table, tr_data;
     
     elm = d.find("entities");
     d.clear(elm);
@@ -176,7 +177,7 @@ function siren() {
   // actions  
   function actions() {
     var elm, coll;
-    var ul, li, frm, lg, fs, fld, inp, p;
+    var segment, frm, header, field, submit;
     
     elm = d.find("actions");
     d.clear(elm);
@@ -228,7 +229,7 @@ function siren() {
   // properties
   function properties() {
     var elm, coll, cls;
-    var ul, dl, dt, dd, a, p;
+    var table, a, tr_data;
     
     elm = d.find("properties");
     d.clear(elm);
