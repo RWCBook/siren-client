@@ -177,21 +177,25 @@ function siren() {
 
     if(g.msg.actions) {
       coll = g.msg.actions;
-      ul = d.node("ul");
+
       for(var act of coll) {
-        li = d.node("li");
+        segment = d.node("div");
+        segment.className = "ui green segment";
         frm = d.node("form");
+        frm.className = "ui form";
         frm.id = act.name;
         frm.setAttribute("smethod",act.method);
         frm.method = act.method;
         frm.action = act.href;
         frm.onsubmit = httpForm;
-        fs = d.node("fieldset");
-        lg = d.node("legend");
-        lg.innerHTML = act.title;
-        d.push(lg, fs);
+        header = d.node("div");
+        header.className = "ui dividing header";
+        header.innerHTML = act.title;
+        d.push(header, frm);
         for (var fld of act.fields) {
-          p = d.input({
+          field = d.node("p");
+          field.className = "inline field";
+          input = d.input({
             "prompt" : fld.title||fld.name,
             "name" : fld.name,
             "className" : fld.class.join(" "),
@@ -201,19 +205,17 @@ function siren() {
             "readOnly" : fld.readOnly||false,
             "pattern" : fld.pattern||""
           });
-          d.push(p,fs);                    
+          d.push(input, field);
+          d.push(field, frm);
         }
-        p = d.node("p");
-        inp = d.node("input");
-        inp.type = "submit";
-        d.push(inp, p);
-        d.push(p, fs);
-        
-        d.push(fs, frm);
-        d.push(frm, li);
-        d.push(li, ul);
+
+        submit = d.node("input");
+        submit.className = "ui positive mini submit button";
+        submit.type = "submit";
+        d.push(submit, frm);
+        d.push(frm, segment);
+        d.push(segment, elm);
       }
-      d.push(ul, elm);
     }
   }  
   
