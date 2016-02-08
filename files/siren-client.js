@@ -124,48 +124,47 @@ function siren() {
   // entities
   function entities() {
     var elm, coll, cls;
-    var ul, li, dl, dt, dd, a, p;
+    var segment, li, dl, dt, dd, a, p;
     
     elm = d.find("entities");
     d.clear(elm);
     
     if(g.msg.entities) {
-      ul = d.node("ul");
       
       coll = g.msg.entities;
-      for(var item of coll) {      
+      for(var item of coll) {
+        segment = d.node("div");
+        segment.className = "ui segment";
+
         cls = item.class[0];
         if(g.fields[cls]) {
-          li = d.node("li");
-          dl = d.node("dl");
-          dt = d.node("dt");
-          
+          menu = d.node("div");
+          menu.className = "ui mini buttons";
           a = d.anchor({
             href:item.href,
             rel:item.rel.join(" "),
-            className:item.class.join(" "),
+            className:item.class.join(" ") + " ui basic blue button",
             text:item.title||item.href});
           a.onclick = httpGet;
-          d.push(a, dt);
-          d.push(dt, dl);
+          d.push(a, menu);
+          d.push(menu, segment);
 
-          dd = d.node("dd");
+          table = d.node("table");
+          table.className = "ui table";
           for(var prop in item) {
             if(g.fields[cls].indexOf(prop)!==-1) {
-              p = d.data({
+              tr_data = d.data_row({
                 className:"item "+item.class.join(" "),
                 text:prop+"&nbsp;",
                 value:item[prop]+"&nbsp;"
               });
-              d.push(p,dd);
+              d.push(tr_data, table);
             }
           }
-          d.push(dd, dl);
-          d.push(dl, li);
-          d.push(li, ul);
+          d.push(table, segment);
         }
+        d.push(segment, elm);
       }
-      d.push(ul, elm);
     }
   }
   
