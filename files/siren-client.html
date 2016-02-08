@@ -14,7 +14,7 @@
     <link href="semantic.min.css" rel="stylesheet" />
     <style>
     /** hidden by default **/
-    #dump { display: none; }
+    #properties, #entities, #dump { display: none; }
     @media only screen and (max-width:767px) {
       .ui.stackable.grid > .column:not(.row) {
         padding-left: 0 !important;
@@ -32,7 +32,7 @@
 
       <div class="ui mobile reversed two column stackable grid">
         <div class="column">
-          <div id="properties"></div>
+          <div id="properties" class="ui segment"></div>
           <div id="entities" class="ui segments" style="margin-top: 0"></div>
         </div>
         <div class="column">
