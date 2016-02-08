@@ -102,22 +102,21 @@ function siren() {
     d.clear(elm);
 
     if(g.msg.links) {
-      ul = d.node("ul");
-      ul.onclick = httpGet;      
+      menu = d.node("div");
+      menu.className = "ui blue fixed top menu";
+      menu.onclick = httpGet;
       coll = g.msg.links;
       for(var link of coll) {
-        li = d.node("li");
         a = d.anchor({
           rel:link.rel.join(" "),
           href:link.href,
           text:link.title||link.href, 
-          className:link.class.join(" "),
+          className:link.class.join(" ") + " item",
           type:link.type||""
         });
-        d.push(a, li);
-        d.push(li,ul);
+        d.push(a, menu);
       }
-      d.push(ul, elm);
+      d.push(menu, elm);
     }
   }
 
